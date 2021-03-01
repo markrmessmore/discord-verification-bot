@@ -22,7 +22,7 @@ I want to begin by giving credit where it is due. The idea for this originally c
 
 ## Configuration (settings.json)
 | Setting               | Explanation                                                                                                       |
-|-----------------------|:-----------------------------------------------------------------------------------------------------------------:|           
+|-----------------------| ----------------------------------------------------------------------------------------------------------------- |           
 | adminRole             | Currently unused, may incorporate if I add a programmatic way to verify users
 | discordToken          | Your handy-dandy token available when you create your discord bot in the [Discord Developer Area](https://discordapp.com/developers/applications/)
 | guildId               | Your guild ID
