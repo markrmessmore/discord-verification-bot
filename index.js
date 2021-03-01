@@ -2,8 +2,7 @@
 const   Discord       = require("discord.js")
         
 // FILES
-const   discordMsg    = require('./discordMsg.js'),
-        newMember     = require('./memberAdd.js'),
+const   newMember     = require('./memberAdd.js'),
         package       = require('./package.json'),
         settings      = require('./settings.json'),
         timer         = require('./timer.js');
@@ -69,38 +68,27 @@ discordClient.on('ready', () => {
     // AUTOMATIC VERIFICATION --> INDIEGOGO API TO CHECK CONTRIBUTIONS?
 })
 
-//MESSAGE HANDLER
-// discordClient.on('message', message => {
-//   // IF THE MESSAGE IS FROM THE BOT
-//   if (message.author.bot) {
-//     return
-//   }
-//   //IF IT DOES NOT USE THE PREFIX
-//   else if (!message.content.startsWith(settings.discordPrefix)) {
-//     return
-//   }
-//   else {
-//     try {
-//       let command = message.content.split(" ")[0];
-//       command = command.slice(settings.discordPrefix.length);
-//       discordMsg[command](message);
-//     }
-//     catch(err) {
-//       exports.msg('That command did not work. Try again', 15000)
-//     }
-//   }
-// });
-
-
 // LOG IN
 discordClient.login(settings.discordToken);
+
+//MESSAGE HANDLER (SPECIFIC TO OUR INSTANCE, USED IN CASE YOU WANT SOMEONE NOTIFIED UPON POSTING AN IMAGE FOR VERIFICATION)
+discordClient.on('message', message => {
+  if (message.author.bot){
+    return
+  }
+  if (message.attachments){
+    let recipient = discordClient.users.cache.get(settings.adminID)
+    recipient.send('There is a verification message awaiting you.')
+    console.log('sent message')
+  }
+})
 
 // WHEN A NEW USER ENTERS THE SERVER
 discordClient.on('guildMemberAdd', member => {
   //ENSURE THIS MEMBER HAS THE 'UNVERIFIED' ROLE
   let role = guild.roles.cache.find(role => role.id === settings.roleId);
   member.roles.add(role)
-  
+
   userList.push(member)
   setTimeout(() => {
     newMember.run(Discord, settings, member)

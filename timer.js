@@ -26,12 +26,6 @@ exports.warn = function(userList, msgList){
                     sendWarning(usr)
                 }
             }
-            else if (
-                (   (now - usrMsgs.last().createdTimestamp) > settings.kickTime )   &&
-                (   (now - usrMsgs.last().createdTimestamp) < (settings.warningTime + settings.iterator )   )
-            ){
-                sendWarning(usr)
-            }
         }
     })
 }
@@ -39,17 +33,18 @@ exports.warn = function(userList, msgList){
 exports.kick = function(userList, msgList){
     userList.forEach(usr => {
         let now = new Date().getTime()
-        //FIRST CHECK IF THE USER HAS BEEN CONNECTED TO THE SERVER LONGER THAN THE ESTABLISHED 'KICK TIME'
-        if (now - usr.joinedTimestamp > settings.kickTime){
-            //FILTER OUT SO WE ONLY HAVE THIS USER'S MESSAGES
-            let usrMsgs = msgList.filter(msg => {
-                if (msg.author.id == usr.user.id){
-                    return msg
-                }
-            })
-            if (usrMsgs.array().length == 0 || ((now - usrMsgs.last().createdTimestamp) > settings.kickTime)){
-                usr.kick('Did not verify within the specified time.')
+        //FILTERING OUT MESSAGES FROM THE REQUESTED USER
+        let usrMsgs = msgList.filter(msg => {
+            if (msg.author.id == usr.user.id){
+                return msg
             }
+        })
+        //IF THE USER HAS JOINED AND NOT POSTED PRIOR TO THE ESTABLISHED `KICK TIME` BOOT THEM
+        if((now - usr.joinedTimestamp > settings.kickTime) && usrMsgs.array().length == 0){
+            usr.kick('Did not verify within the specified time.')
+        }
+        else if(now - usr.joinedTimestamp > (settings.kickTime * 24)){
+            usr.kick('User posted however no one verified within the allotted time.')
         }
     })
 }
