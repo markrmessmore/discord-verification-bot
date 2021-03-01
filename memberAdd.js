@@ -6,5 +6,5 @@ exports.run = function(Discord, settings, member){
     .setTitle(`Welcome to the ${settings.guildName} Discord Server!`)
     .setDescription(`\nWelcome ***${member.user.username}*** to the ${settings.guildName} Discord Server!\n\n${settings.welcomeMsg}`);
 
-    discordBot.msg(memberMsg, 30000)
+    discordBot.msg(memberMsg, 60000)
 }

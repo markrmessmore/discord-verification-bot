@@ -1,11 +1,12 @@
 {
-  "discordToken"  : "DISCORD TOKEN",
-  "guildId"       : "GUILD ID",
-  "guildName"     : "GUILD NAME",
-  "maxInactivity" : 86400000,
-  "warnDelay"     : 43200000,
-  "discordChannel": "DISCORD CHANNEL",
-  "roleId"        : "ROLE ID",
-  "testing"       : true,
-  "welcomeMsg"    : "WELCOME MESSAGE."
+  "discordToken"        : "DISCORD TOKEN",
+  "guildId"             : "GUILD ID",
+  "guildName"           : "GUILD TITLE",
+  "iterator"            : 60000,
+  "kickTime"            : 600000,
+  "msgChannel"          : "CHANNEL FOR THE BOT TO SEND MESSAGES",
+  "roleId"              : "ID FOR THE ROLE TO FILTER BY (e.g. 'Unverified')",
+  "verificationChannel" : "Channel that tracks user activity.",
+  "warningTime"         : 300000,
+  "welcomeMsg"          : "YOUR SUPER AWESOME WELCOME MESSAGE"
 }
