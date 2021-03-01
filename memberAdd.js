@@ -1,10 +1,10 @@
 const discordBot = require('./index.js')
 
-exports.run = function(Discord, member){
+exports.run = function(Discord, settings, member){
     let memberMsg = new Discord.MessageEmbed()
     .setColor(3447003)
-    .setTitle(`Welcome to the ${config.guildName} Discord Server!`)
-    .setDescription(`\nWelcome ***${member.user.username}*** to the ${config.guildName} Discord Server!\n${settings.welcomeMsg}`);
+    .setTitle(`Welcome to the ${settings.guildName} Discord Server!`)
+    .setDescription(`\nWelcome ***${member.user.username}*** to the ${settings.guildName} Discord Server!\n\n${settings.welcomeMsg}`);
 
-    discordBot.msg(memberMsg)
+    discordBot.msg(memberMsg, 30000)
 }
