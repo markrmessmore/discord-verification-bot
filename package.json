@@ -1,14 +1,14 @@
 {
-  "name": "discord-inactive-user-kick",
+  "name": "RubyBot",
   "version": "1.0.0",
-  "description": "Automatically kicks a user if they haven't sent any messages for a specific time.",
+  "description": "Facilitates verification of users and expels users from the server if no response is given in a certain amount of time.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Ishidres/discord-inactive-user-kick.git"
+    "url": ""
   },
   "keywords": [
     "Discord",
@@ -17,13 +17,9 @@
     "Kick",
     "User"
   ],
-  "author": "Ishidres (www.ishidres.eu)",
+  "author": "Elihu (markrmessmore@gmail.com)",
   "license": "SEE LICENSE IN LICENSE",
-  "bugs": {
-    "url": "https://github.com/Ishidres/discord-inactive-user-kick/issues"
-  },
-  "homepage": "https://github.com/Ishidres/discord-inactive-user-kick#readme",
   "dependencies": {
-    "discord.js": "11.6.4"
+    "discord.js": "^12.5.1"
   }
 }

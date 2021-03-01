@@ -1,0 +1,11 @@
+{
+  "discordToken"  : "DISCORD TOKEN",
+  "guildId"       : "GUILD ID",
+  "guildName"     : "GUILD NAME",
+  "maxInactivity" : 86400000,
+  "warnDelay"     : 43200000,
+  "discordChannel": "DISCORD CHANNEL",
+  "roleId"        : "ROLE ID",
+  "testing"       : true,
+  "welcomeMsg"    : "WELCOME MESSAGE."
+}

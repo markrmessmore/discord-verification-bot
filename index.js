@@ -1,119 +1,50 @@
-const Discord = require('discord.js');
-const client = new Discord.Client({ fetchAllMembers: true });
+// LIBRARIES
+const   Discord       = require("discord.js")
+        
+// FILES
+const   newMember     = require('./memberAdd.js'),
+        package       = require('./package.json'),
+        settings      = require('./settings.json');
 
-const fs = require("fs");
-const config = require("./config.json");
-const package = require("./package.json");
+// CLIENTS
+const   discordClient = new Discord.Client()
 
-var saved_users = {};
+//USERS TO WATDCH
+const   userList      = []
 
-// import savedUsers.json if it exists already
-if (fs.existsSync(__dirname + "/savedUsers.json"))
-  saved_users = JSON.parse(fs.readFileSync("./savedUsers.json", "utf8"));
+// ON READY...
+discordClient.on('ready', () => {
+  console.log(`${new Date()}: ${package.name} has logged in`)
+  discordClient.guilds.cache.get(settings.guildId).members.fetch()
+  .then(res => {
+    res.forEach(mem => {
+      if (mem.roles.cache.some(role => role.id == settings.roleId)){
+        // console.log(mem.user.fetch())
+      }
+    })
+    // CREATE CURRENT LIST
+    // FIRE THE SETTIMEOUT FUNCTION TO PRUNE --> SHOULD WARN AFTER 5 MINUTES, DELETE AFTER 10
+    // WHEN A NEW MEMBER ENTERS, ADD TO THE LIST
+    // WHEN SOMEONE IS KICKED, REMOVE FROM THE LIST
 
-client.on('ready', () => {
-  console.log(new Date() + ": Logged in as " + client.user.tag);
-
-  if (client.guilds.array().length > 1) {
-    console.log("WARNING: The bot has been added to " + client.guilds.array().length + " servers but should only be used on one server at once and will now shutdown. Please remove the bot from all servers but one and restart it!");
-    process.exit();
-  }
-
-  client.user.setPresence({ activity: { name: "by Ishidres#5758" }, status: 'online' })
+    // AUTOMATIC VERIFICATION --> INDIEGOGO API TO CHECK CONTRIBUTIONS?
+  })
+  .catch(e  => console.error(e))
 });
 
-client.on('message', message => {
-  // Don't kick bots
-  if (message.author.bot) return;
+// LOG IN
+discordClient.login(settings.discordToken);
 
-  // reply when receiving !help in direct message
-  if (message.channel.type === "dm") {
-    if (!!message.content) {
-      if (message.content.toLowerCase().startsWith("!help"))
-        message.reply("This bot doesn't offer any commands and has to be set up manually."
-        + "\nPlease refer to " + package.homepage + " for more information.");
-    }
-
-    return;
-  }
-
-  if (!saved_users[message.author.id])
-    saved_users[message.author.id] = {};
-
-  saved_users[message.author.id].lastMessage = new Date().getTime();
-  saved_users[message.author.id].guild = message.guild.id;
-  console.log(new Date() + ": Message received by " + message.author.tag);
-
-  // Save the data
-  fs.writeFileSync("./savedUsers.json", JSON.stringify(saved_users));
+// WHEN A NEW USER ENTERS THE SERVER
+discordClient.on('guildMemberAdd', member => {
+  newMember.run(Discord, member)
 });
 
-// checking for users to kick every 10 minutes (600 000 ms)
-setInterval(function () {
-  let now = new Date().getTime();
-  let actions = 0;
-  let all_users = client.users.array();
-
-  // Save all users
-  for (y=0; y<all_users.length; y++) {
-    if (all_users[y].id.length < 10)
-      continue;
-
-    // Save users even if they haven't messaged anything yet
-    if (!saved_users[all_users[y].id])
-      saved_users[all_users[y].id] = {
-        lastMessage: new Date().getTime(),
-        guild: client.guilds.array()[0].id
-      }
-  }
-
-  // Save users
-  fs.writeFileSync("./savedUsers.json", JSON.stringify(saved_users));
-
-  Object.keys(saved_users).map(function (i) {
-    // Prevent ratelimits
-    if (actions >= 5)
-      return;
-
-    let diff = now - saved_users[i].lastMessage;
-    let user = client.users.get(i);
-    let channel = client.channels.get(config.warnMessagesChannel);
-
-    if (!user) {
-      user = "UserIsOffline#0000";
-    } else {
-      user = user.tag;
-    }
-
-    if (diff >= config.warnDelay && saved_users[i].warned !== true) {
-      console.log(new Date() + ": User " + i + " will be kicked in " + config.warnDelay + " ms.");
-
-      if (!!channel)
-        channel.send(":warning: User " + user + " (ID: " + i + ") will be kicked in " + (config.warnDelay / 60 / 60 / 1000) + " minutes.");
-
-      saved_users[i].warned = true;
-      actions++;
-    }
-
-    if (diff >= config.maxInactivity) {
-      console.log(new Date() + ": Kicking User " + i + " due to inactivity.");
-      var guild = client.guilds.get(saved_users[i].guild);
-
-      // Don't really kick users if testing is enabled
-      if (config.testing !== true) {
-        guild.fetchMember(i).then(member => {
-          member.kick("Kicked due to inactivity.");
-
-          if (!!channel)
-            channel.send("🔨 " + member.user.tag + " has been kicked due to inactivity.");
-        });
-      }
-
-      actions++;
-      delete saved_users[i];
-      fs.writeFileSync("./savedUsers.json", JSON.stringify(saved_users));
-    }
-  });
-}, 60*1000);
-
-client.login(config.token);
+//GENERIC MESSAGE FUNCTION TO BE USED EVERYWHERE
+exports.msg = function(msg){
+  discordClient.channels.cache.get(settings.discordChannel).send(msg)
+  .then(m => m.delete({timeout : 600000}))
+  .catch(err => {
+    console.log(err)
+  })
+}
