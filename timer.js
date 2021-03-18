@@ -42,9 +42,15 @@ exports.kick = function(userList, msgList){
         //IF THE USER HAS JOINED AND NOT POSTED PRIOR TO THE ESTABLISHED `KICK TIME` BOOT THEM
         if((now - usr.joinedTimestamp > settings.kickTime) && usrMsgs.array().length == 0){
             usr.kick('Did not verify within the specified time.')
+            .then()
+            .catch(e => console.log(e))
         }
         else if(now - usr.joinedTimestamp > (settings.kickTime * 24)){
             usr.kick('User posted however no one verified within the allotted time.')
+            .then()
+            .catch(e => {
+                console.log(e)
+            })
         }
     })
 }

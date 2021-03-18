@@ -104,8 +104,10 @@ discordClient.on('guildMemberRemove', member => {
 //GENERIC MESSAGE FUNCTION TO BE USED EVERYWHERE
 exports.msg = function(msg, time){
   msgChannel.send(msg)
-  .then(m => m.delete({timeout : time}))
-  .catch(err => {
-    console.log(err)
-  })
+  .then(m => 
+    m.delete({timeout : time})
+    .catch(err => {
+      console.log(err)
+    })
+  )
 }

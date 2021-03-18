@@ -1,5 +1,5 @@
 {
-  "name": "RubyBot",
+  "name": "rubybot",
   "version": "1.0.0",
   "description": "Facilitates verification of users and expels users from the server if no response is given in a certain amount of time.",
   "main": "index.js",
